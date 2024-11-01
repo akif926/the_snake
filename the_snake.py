@@ -21,6 +21,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
 
+
 class GameObject:
     """Base class for all game objects."""
 
@@ -38,6 +39,7 @@ class GameObject:
         """Draw the object on the game surface."""
         pass
 
+
 class Apple(GameObject):
     """Class representing the apple in the game."""
 
@@ -54,6 +56,7 @@ class Apple(GameObject):
     def draw(self, surface):
         """Draw the apple as a red square on the surface."""
         pygame.draw.rect(surface, self.body_color, (*self.position, GRID_SIZE, GRID_SIZE))
+
 
 class Snake(GameObject):
     """Class representing the snake, handling its movement and interactions."""
@@ -75,6 +78,7 @@ class Snake(GameObject):
         """Move the snake according to its direction."""
         if self.next_direction:
             self.direction = self.next_direction
+
         new_head = (
             self.positions[0][0] + self.direction[0],
             self.positions[0][1] + self.direction[1]
@@ -98,6 +102,7 @@ class Snake(GameObject):
         for segment in self.positions:
             pygame.draw.rect(surface, self.body_color, (*segment, GRID_SIZE, GRID_SIZE))
 
+
 def handle_keys(snake):
     """Handle key presses to control the snake's movement."""
     keys = pygame.key.get_pressed()
@@ -109,6 +114,7 @@ def handle_keys(snake):
         snake.update_direction(LEFT)
     elif keys[pygame.K_RIGHT]:
         snake.update_direction(RIGHT)
+
 
 def main():
     """Main game loop managing initialization, events, updates, and rendering."""
@@ -139,6 +145,7 @@ def main():
         clock.tick(10)
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
