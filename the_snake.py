@@ -48,8 +48,8 @@ class Apple(GameObject):
 
         :return: Tuple of (x, y) coordinates for the new position
         """
-        x = random.randint(0, WINDOW_WIDTH // 20 - 1) * 20
-        y = random.randint(0, WINDOW_HEIGHT // 20 - 1) * 20
+        x = random.randint(0, (WINDOW_WIDTH // 20) - 1) * 20
+        y = random.randint(0, (WINDOW_HEIGHT // 20) - 1) * 20
         return (x, y)
 
     def draw(self, surface):
@@ -130,7 +130,46 @@ def handle_keys(snake):
 
 def main():
     """Main game loop handling initialization, events, updates, and rendering."""
-    # Your game loop logic goes here
+    snake = Snake()
+    apple = Apple()
+    running = True
+
+    while running:
+        screen.fill(BACKGROUND_COLOR)
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Control snake with keys
+        handle_keys(snake)
+
+        # Update snake direction and move
+        snake.move()
+
+        # Check if snake eats the apple
+        if snake.get_head_position() == apple.position:
+            snake.grow()
+            apple.position = apple.randomize_position()
+
+        # Check for self-collision
+        if len(snake.positions) != len(set(snake.positions)):
+            snake.reset()
+
+        # Draw apple and snake
+        apple.draw(screen)
+        snake.draw(screen)
+
+        # Refresh screen
+        pygame.display.update()
+
+        # Control game speed - set to 10 FPS
+        clock.tick(10)
+
+    pygame.quit()
 
 
-# Ensure a newline at the end of
+# Run the game
+if __name__ == "__main__":
+    main()
