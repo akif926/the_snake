@@ -1,7 +1,6 @@
 import pygame
 import random
 
-
 # Initialize Pygame and set up window dimensions
 pygame.init()
 WINDOW_WIDTH, WINDOW_HEIGHT = 600, 400
