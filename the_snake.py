@@ -80,13 +80,15 @@ class Snake(GameObject):
 
     def move(self):
         """
-        Move the snake based on its direction, add a new head and remove the
-        tail if length unchanged.
+        Move the snake based on its direction, add a new head and remove
+        the tail if length unchanged.
         """
         if self.next_direction:
             self.direction = self.next_direction
-        new_head = (self.positions[0][0] + self.direction[0],
-                    self.positions[0][1] + self.direction[1])
+        new_head = (
+            self.positions[0][0] + self.direction[0],
+            self.positions[0][1] + self.direction[1]
+        )
         self.positions = [new_head] + self.positions[:self.length - 1]
 
     def grow(self):
