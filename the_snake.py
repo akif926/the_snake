@@ -122,7 +122,7 @@ def handle_keys(snake):
 
 
 def main():
-    """Main game loop managing initialization, events, updates, and rendering."""
+    """Main game loop maing initialization, events, updates, and rendering."""
     snake = Snake()
     apple = Apple()
     running = True
