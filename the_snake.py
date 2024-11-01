@@ -135,7 +135,7 @@ def main():
 
         # Event handling
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # Исправлено
                 pygame.quit()
                 return
 
