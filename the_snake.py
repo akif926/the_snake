@@ -30,7 +30,7 @@ class GameObject:
         Initialize a game object with a position and color.
 
         :param position: Tuple of coordinates (x, y), default is (0, 0)
-        :param body_color: Tuple of RGB color, default is (255, 255, 255) (white)
+        :param body_color: Tuple of RGB color, default is (255, 255, 255)
         """
         self.position = position
         self.body_color = body_color
@@ -63,7 +63,10 @@ class Snake(GameObject):
 
     def __init__(self):
         """Initialize the snake with a length of 1 and a default direction."""
-        super().__init__((SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), (0, 255, 0))
+        super().__init__(
+            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+            (0, 255, 0)
+        )
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT  # Default movement is to the right
