@@ -16,11 +16,11 @@ clock = pygame.time.Clock()
 
 class GameObject:
     """Base class for all game objects."""
-    
+
     def __init__(self, position, body_color):
         """
         Initialize the game object with a position and color.
-        
+
         :param position: Tuple of (x, y) coordinates
         :param body_color: RGB color tuple
         """
@@ -30,7 +30,7 @@ class GameObject:
     def draw(self, surface):
         """
         Draw the object on the game surface. Should be overridden.
-        
+
         :param surface: Pygame surface where the object is drawn
         """
         pass
@@ -38,7 +38,7 @@ class GameObject:
 
 class Apple(GameObject):
     """Represents an apple in the game."""
-    
+
     def __init__(self):
         """Initialize the apple with a random position and color (red)."""
         super().__init__(self.randomize_position(), (255, 0, 0))
@@ -46,7 +46,7 @@ class Apple(GameObject):
     def randomize_position(self):
         """
         Randomize the position of the apple within the game field.
-        
+
         :return: Tuple of (x, y) coordinates for the new position
         """
         x = random.randint(0, WINDOW_WIDTH // 20 - 1) * 20
@@ -60,7 +60,7 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Represents the snake and manages its movement and interactions."""
-    
+
     def __init__(self):
         """Initialize the snake with a length of 1 and a default direction."""
         super().__init__((WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2), (0, 255, 0))
@@ -72,7 +72,7 @@ class Snake(GameObject):
     def update_direction(self, new_direction):
         """
         Update the direction of the snake based on user input.
-        
+
         :param new_direction: Tuple representing new direction (dx, dy)
         """
         # Prevent reversing direction directly
@@ -98,7 +98,7 @@ class Snake(GameObject):
     def get_head_position(self):
         """
         Get the current head position of the snake.
-        
+
         :return: Tuple representing head coordinates
         """
         return self.positions[0]
@@ -112,7 +112,7 @@ class Snake(GameObject):
 def handle_keys(snake):
     """
     Handle key presses to control the snake's movement.
-    
+
     :param snake: Instance of the Snake class
     """
     keys = pygame.key.get_pressed()
