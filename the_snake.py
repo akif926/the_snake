@@ -80,8 +80,8 @@ class Snake(GameObject):
 
     def move(self):
         """
-        Move the snake based on its direction, add a new head and remove the tail
-        if length unchanged.
+        Move the snake based on its direction, add a new head and remove the
+        tail if length unchanged.
         """
         if self.next_direction:
             self.direction = self.next_direction
@@ -130,5 +130,3 @@ def handle_keys(snake):
 
 def main():
     """Main game loop handling initialization, events, updates, and rendering."""
-    snake = Snake()
-    apple = Apple()
