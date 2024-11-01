@@ -79,7 +79,10 @@ class Snake(GameObject):
             self.next_direction = new_direction
 
     def move(self):
-        """Move the snake based on its direction, add a new head and remove the tail if length unchanged."""
+        """
+        Move the snake based on its direction, add a new head and remove the tail
+        if length unchanged.
+        """
         if self.next_direction:
             self.direction = self.next_direction
         new_head = (self.positions[0][0] + self.direction[0],
@@ -129,42 +132,3 @@ def main():
     """Main game loop handling initialization, events, updates, and rendering."""
     snake = Snake()
     apple = Apple()
-
-    while True:
-        screen.fill(BACKGROUND_COLOR)
-
-        # Event handling
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # Исправлено
-                pygame.quit()
-                return
-
-        # Control snake with keys
-        handle_keys(snake)
-
-        # Update snake direction and move
-        snake.move()
-
-        # Check if snake eats the apple
-        if snake.get_head_position() == apple.position:
-            snake.grow()
-            apple.position = apple.randomize_position()
-
-        # Check for self-collision
-        if len(snake.positions) != len(set(snake.positions)):
-            snake.reset()
-
-        # Draw apple and snake
-        apple.draw(screen)
-        snake.draw(screen)
-
-        # Refresh screen
-        pygame.display.update()
-
-        # Control game speed - set to 10 FPS
-        clock.tick(10)
-
-
-# Run the game
-if __name__ == "__main__":
-    main()
