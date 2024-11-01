@@ -1,87 +1,87 @@
 import pygame
 import random
 
-# Инициализация Pygame и задание размеров окна
+# Initialize Pygame and set up window dimensions
 pygame.init()
 WINDOW_WIDTH, WINDOW_HEIGHT = 600, 400
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
-BACKGROUND_COLOR = (0, 0, 0)  # Черный цвет фона
+BACKGROUND_COLOR = (0, 0, 0)  # Black
 
-# Настройка отображения
+# Set up display
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
 
 
 class GameObject:
-    """Базовый класс для всех игровых объектов."""
+    """Base class for all game objects."""
 
     def __init__(self, position, body_color):
         """
-        Инициализация игрового объекта с позицией и цветом.
+        Initialize the game object with a position and color.
 
-        :param position: Кортеж координат (x, y)
-        :param body_color: Кортеж RGB цвета
+        :param position: Tuple of (x, y) coordinates
+        :param body_color: RGB color tuple
         """
         self.position = position
         self.body_color = body_color
 
     def draw(self, surface):
         """
-        Отрисовка объекта на игровой поверхности. Метод должен быть переопределен.
+        Draw the object on the game surface. Should be overridden.
 
-        :param surface: Поверхность Pygame для рисования объекта
+        :param surface: Pygame surface where the object is drawn
         """
         pass
 
 
 class Apple(GameObject):
-    """Класс, представляющий яблоко в игре."""
+    """Represents an apple in the game."""
 
     def __init__(self):
-        """Инициализация яблока со случайной позицией и цветом (красный)."""
+        """Initialize the apple with a random position and color (red)."""
         super().__init__(self.randomize_position(), (255, 0, 0))
 
     def randomize_position(self):
         """
-        Случайным образом задает позицию яблока внутри игрового поля.
+        Randomize the position of the apple within the game field.
 
-        :return: Кортеж координат (x, y) для новой позиции
+        :return: Tuple of (x, y) coordinates for the new position
         """
         x = random.randint(0, (WINDOW_WIDTH // 20) - 1) * 20
         y = random.randint(0, (WINDOW_HEIGHT // 20) - 1) * 20
         return (x, y)
 
     def draw(self, surface):
-        """Отрисовка яблока в виде красного квадрата на поверхности."""
+        """Draw the apple as a red square on the surface."""
         pygame.draw.rect(surface, self.body_color, (*self.position, 20, 20))
 
 
 class Snake(GameObject):
-    """Класс, представляющий змею, и управляющий ее движением и взаимодействиями."""
+    """Represents the snake and manages its movement and interactions."""
 
     def __init__(self):
-        """Инициализация змеи с длиной 1 и направлением по умолчанию."""
+        """Initialize the snake with a length of 1 and a default direction."""
         super().__init__((WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2), (0, 255, 0))
         self.length = 1
         self.positions = [self.position]
-        self.direction = (20, 0)  # Движение вправо по умолчанию
+        self.direction = (20, 0)  # Moving right by default
         self.next_direction = None
 
     def update_direction(self, new_direction):
         """
-        Обновление направления змеи на основе пользовательского ввода.
+        Update the direction of the snake based on user input.
 
-        :param new_direction: Кортеж, представляющий новое направление (dx, dy)
+        :param new_direction: Tuple representing new direction (dx, dy)
         """
-        # Запрет на изменение направления на противоположное
+        # Prevent reversing direction directly
         if (new_direction[0] * -1, new_direction[1] * -1) != self.direction:
             self.next_direction = new_direction
 
     def move(self):
         """
-        Движение змеи в соответствии с ее направлением, добавление новой
-        головы и удаление хвоста, если длина не изменилась.
+        Move the snake based on its direction, add a new head and remove
+        the tail if length unchanged.
         """
         if self.next_direction:
             self.direction = self.next_direction
@@ -92,32 +92,32 @@ class Snake(GameObject):
         self.positions = [new_head] + self.positions[:self.length - 1]
 
     def grow(self):
-        """Увеличение длины змеи на один сегмент."""
+        """Increase the length of the snake by one segment."""
         self.length += 1
 
     def reset(self):
-        """Сброс змеи до начальной длины и позиции."""
+        """Reset the snake to its initial length and position."""
         self.__init__()
 
     def get_head_position(self):
         """
-        Получить текущую позицию головы змеи.
+        Get the current head position of the snake.
 
-        :return: Кортеж координат головы
+        :return: Tuple representing head coordinates
         """
         return self.positions[0]
 
     def draw(self, surface):
-        """Отрисовка сегментов тела змеи на поверхности."""
+        """Draw the snake's body segments on the surface."""
         for segment in self.positions:
             pygame.draw.rect(surface, self.body_color, (*segment, 20, 20))
 
 
 def handle_keys(snake):
     """
-    Обработка нажатий клавиш для управления движением змеи.
+    Handle key presses to control the snake's movement.
 
-    :param snake: Экземпляр класса Snake
+    :param snake: Instance of the Snake class
     """
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
@@ -131,7 +131,7 @@ def handle_keys(snake):
 
 
 def main():
-    """Главный игровой ци который управляет инициализацией, событиями, обновлениями и отрисовкой."""
+    """Main game lp handling initiization, events, updates, and rendering."""
     snake = Snake()
     apple = Apple()
     running = True
@@ -139,39 +139,39 @@ def main():
     while running:
         screen.fill(BACKGROUND_COLOR)
 
-        # Обработка событий
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Управление змеей с помощью клавиш
+        # Control snake with keys
         handle_keys(snake)
 
-        # Обновление направления змеи и движение
+        # Update snake direction and move
         snake.move()
 
-        # Проверка, ест ли змея яблоко
+        # Check if snake eats the apple
         if snake.get_head_position() == apple.position:
             snake.grow()
             apple.position = apple.randomize_position()
 
-        # Проверка на самопересечение
+        # Check for self-collision
         if len(snake.positions) != len(set(snake.positions)):
             snake.reset()
 
-        # Отрисовка яблока и змеи
+        # Draw apple and snake
         apple.draw(screen)
         snake.draw(screen)
 
-        # Обновление экрана
+        # Refresh screen
         pygame.display.update()
 
-        # Задание скорости игры - 10 кадров в секунду
+        # Control game speed - set to 10 FPS
         clock.tick(10)
 
     pygame.quit()
 
 
-# Запуск игры
+# Run the game
 if __name__ == "__main__":
     main()
