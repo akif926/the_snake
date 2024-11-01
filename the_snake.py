@@ -1,88 +1,78 @@
 import pygame
 import random
 
-# Initialize Pygame and set up window dimensions
-pygame.init()
-WINDOW_WIDTH, WINDOW_HEIGHT = 600, 400
-WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
-BACKGROUND_COLOR = (0, 0, 0)  # Black
+# Constants for screen and grid dimensions
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 400
+GRID_SIZE = 20
+GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
+GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+BOARD_BACKGROUND_COLOR = (0, 0, 0)  # Background color of the game board
 
-# Set up display
-screen = pygame.display.set_mode(WINDOW_SIZE)
+# Constants for movement directions
+UP = (0, -GRID_SIZE)
+DOWN = (0, GRID_SIZE)
+LEFT = (-GRID_SIZE, 0)
+RIGHT = (GRID_SIZE, 0)
+
+# Display setup
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake Game")
 clock = pygame.time.Clock()
-
 
 class GameObject:
     """Base class for all game objects."""
 
-    def __init__(self, position, body_color):
+    def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
         """
-        Initialize the game object with a position and color.
+        Initialize a game object with a position and color.
 
-        :param position: Tuple of (x, y) coordinates
-        :param body_color: RGB color tuple
+        :param position: Tuple of coordinates (x, y), default is (0, 0)
+        :param body_color: Tuple of RGB color, default is (255, 255, 255) (white)
         """
         self.position = position
         self.body_color = body_color
 
     def draw(self, surface):
-        """
-        Draw the object on the game surface. Should be overridden.
-
-        :param surface: Pygame surface where the object is drawn
-        """
+        """Draw the object on the game surface."""
         pass
 
-
 class Apple(GameObject):
-    """Represents an apple in the game."""
+    """Class representing the apple in the game."""
 
     def __init__(self):
         """Initialize the apple with a random position and color (red)."""
         super().__init__(self.randomize_position(), (255, 0, 0))
 
     def randomize_position(self):
-        """
-        Randomize the position of the apple within the game field.
-
-        :return: Tuple of (x, y) coordinates for the new position
-        """
-        x = random.randint(0, (WINDOW_WIDTH // 20) - 1) * 20
-        y = random.randint(0, (WINDOW_HEIGHT // 20) - 1) * 20
+        """Set the apple's position within the game grid."""
+        x = random.randint(0, GRID_WIDTH - 1) * GRID_SIZE
+        y = random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
         return (x, y)
 
     def draw(self, surface):
         """Draw the apple as a red square on the surface."""
-        pygame.draw.rect(surface, self.body_color, (*self.position, 20, 20))
-
+        pygame.draw.rect(surface, self.body_color, (*self.position, GRID_SIZE, GRID_SIZE))
 
 class Snake(GameObject):
-    """Represents the snake and manages its movement and interactions."""
+    """Class representing the snake, handling its movement and interactions."""
 
     def __init__(self):
         """Initialize the snake with a length of 1 and a default direction."""
-        super().__init__((WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2), (0, 255, 0))
+        super().__init__((SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), (0, 255, 0))
         self.length = 1
         self.positions = [self.position]
-        self.direction = (20, 0)  # Moving right by default
+        self.direction = RIGHT  # Default movement is to the right
         self.next_direction = None
 
     def update_direction(self, new_direction):
-        """
-        Update the direction of the snake based on user input.
-
-        :param new_direction: Tuple representing new direction (dx, dy)
-        """
-        # Prevent reversing direction directly
+        """Update the snake's direction based on player input."""
         if (new_direction[0] * -1, new_direction[1] * -1) != self.direction:
             self.next_direction = new_direction
 
     def move(self):
-        """
-        Move the snake based on its direction, add a new head and remove
-        the tail if length unchanged.
-        """
+        """Move the snake according to its direction."""
         if self.next_direction:
             self.direction = self.next_direction
         new_head = (
@@ -92,7 +82,7 @@ class Snake(GameObject):
         self.positions = [new_head] + self.positions[:self.length - 1]
 
     def grow(self):
-        """Increase the length of the snake by one segment."""
+        """Increase the snake's length by one segment."""
         self.length += 1
 
     def reset(self):
@@ -100,78 +90,55 @@ class Snake(GameObject):
         self.__init__()
 
     def get_head_position(self):
-        """
-        Get the current head position of the snake.
-
-        :return: Tuple representing head coordinates
-        """
+        """Get the current position of the snake's head."""
         return self.positions[0]
 
     def draw(self, surface):
         """Draw the snake's body segments on the surface."""
         for segment in self.positions:
-            pygame.draw.rect(surface, self.body_color, (*segment, 20, 20))
-
+            pygame.draw.rect(surface, self.body_color, (*segment, GRID_SIZE, GRID_SIZE))
 
 def handle_keys(snake):
-    """
-    Handle key presses to control the snake's movement.
-
-    :param snake: Instance of the Snake class
-    """
+    """Handle key presses to control the snake's movement."""
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
-        snake.update_direction((0, -20))
+        snake.update_direction(UP)
     elif keys[pygame.K_DOWN]:
-        snake.update_direction((0, 20))
+        snake.update_direction(DOWN)
     elif keys[pygame.K_LEFT]:
-        snake.update_direction((-20, 0))
+        snake.update_direction(LEFT)
     elif keys[pygame.K_RIGHT]:
-        snake.update_direction((20, 0))
-
+        snake.update_direction(RIGHT)
 
 def main():
-    """Main game lp handling initiization, events, updates, and rendering."""
+    """Main game loop managing initialization, events, updates, and rendering."""
     snake = Snake()
     apple = Apple()
     running = True
 
     while running:
-        screen.fill(BACKGROUND_COLOR)
+        screen.fill(BOARD_BACKGROUND_COLOR)
 
-        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Control snake with keys
         handle_keys(snake)
-
-        # Update snake direction and move
         snake.move()
 
-        # Check if snake eats the apple
         if snake.get_head_position() == apple.position:
             snake.grow()
             apple.position = apple.randomize_position()
 
-        # Check for self-collision
         if len(snake.positions) != len(set(snake.positions)):
             snake.reset()
 
-        # Draw apple and snake
         apple.draw(screen)
         snake.draw(screen)
-
-        # Refresh screen
         pygame.display.update()
-
-        # Control game speed - set to 10 FPS
         clock.tick(10)
 
     pygame.quit()
 
-
-# Run the game
 if __name__ == "__main__":
     main()
